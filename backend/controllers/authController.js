@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
@@ -13,8 +13,8 @@ exports.register = async (req, res) => {
         if (user) {
             return res.status(400).json({ success: false, message: 'User already exists' });
         }
-
-        user = await User.create({ name, email, password });
+        
+        user = await User.create({ name, email, password, role: role || 'user' });
 
         const token = jwt.sign(
             { id: user._id, email: user.email, role: user.role },

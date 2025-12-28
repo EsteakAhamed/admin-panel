@@ -1,7 +1,11 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import api from '../utils/api';
 
 export const AuthContext = createContext();
+
+export const useAuth = () => {
+    return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -27,8 +31,8 @@ export const AuthProvider = ({ children }) => {
         setUser(user);
     };
 
-    const register = async (name, email, password) => {
-        const response = await api.post('/auth/register', { name, email, password });
+    const register = async (name, email, password, role) => {
+        const response = await api.post('/auth/register', { name, email, password, role });
         const { token, user } = response.data;
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
